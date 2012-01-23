@@ -19,6 +19,7 @@ $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
 $picknum = filter_input(INPUT_POST, 'picknum', FILTER_SANITIZE_NUMBER_INT);
 $subject = filter_input(INPUT_POST, 'subject', FILTER_SANITIZE_STRING);
+$priority = filter_input(INPUT_POST, 'priority', FILTER_SANITIZE_STRING);
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {		//Check to see if the form has been submitted before validating
@@ -40,6 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {		//Check to see if the form has been
 		
 	if (!in_array($subject, $possible_subjects)) {
 		$errors['subject'] = true;
+	}
+
+	if (!array_key_exists($priority, $possible_priorities)) {
+		$errors['priority'] = true;
 	}
 
 }
@@ -73,8 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {		//Check to see if the form has been
 		</div>
 		<fieldset>
 			<legend>Message Priority</legend>
+			<?php if (isset($errors['priority'])) : ?> <strong>Select a priority</strong><?php endif; ?>
 		<?php foreach ($possible_priorities as $key => $value) : ?>
-			<input type="radio" id="<?php echo $key; ?>" name="priority">
+			<input type="radio" id="<?php echo $key; ?>" name="priority" value="<?php echo $key; ?>"<?php if ($key == $priority) { echo ' checked'; } ?>>
 			<label for="<?php echo $key; ?>"><?php echo $value; ?></label>
 		<?php endforeach; ?>
 		</fieldset>
